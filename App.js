@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button } from 'react-native';
 
-const API_KEY = '8158ea1b56e2497492b163654241204'; // Your API key
+// andres ibanez api call
+
+const API_KEY = '8158ea1b56e2497492b163654241204'; 
 
 const App = () => {
   const [weatherData, setWeatherData] = useState(null);
-  const [zipCode, setZipCode] = useState(''); // State to store the zip code input value
+  const [zipCode, setZipCode] = useState(''); 
 
   const fetchWeatherData = () => {
    
