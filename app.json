@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "weatherApp",
-    "slug": "weatherApp",
+    "name": "firebase_auth_tutorial",
+    "slug": "firebase_auth_tutorial",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
