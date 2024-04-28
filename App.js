@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, ScrollView, Keyboard } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { initializeApp } from '@firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from '@firebase/auth';
@@ -59,6 +59,29 @@ const AuthenticatedScreen = ({ user, handleAuthentication }) => {
 
   const [weatherData, setWeatherData] = useState(null);
   const [zipCode, setZipCode] = useState(''); 
+  const [clothingSuggestions, setClothingSuggestions] = useState([]);
+
+  const fetchClothingSuggestions = (weatherCondition) => {
+    // Add logic here to fetch clothing suggestions based on the weather condition
+    // For example, you can use an if-else ladder to check the weather condition and suggest appropriate clothing items
+  
+    let suggestions = [];
+  
+    if (weatherCondition.includes('Sunny')) {
+      suggestions.push('Shorts', 'T-shirt', 'Sunglasses');
+    } else if (weatherCondition.includes('cloudy')) {
+      suggestions.push('Jeans', 'T-shirt', 'Jacket');
+    } else if (weatherCondition.includes('rainy')) {
+      suggestions.push('Raincoat', 'Umbrella', 'Boots');
+    } else if (weatherCondition.includes('snowy')) {
+      suggestions.push('Ski pants', 'Jacket', 'Snow boots');
+    }else if (weatherCondition.includes('Clear')) {
+      suggestions.push('shirt', 'shoes', 'pants');
+    }
+
+    setClothingSuggestions(suggestions);
+  };
+  
 
   const fetchWeatherData = () => {
    
@@ -70,6 +93,7 @@ const AuthenticatedScreen = ({ user, handleAuthentication }) => {
       .then(data => {
         console.log('Weather Data:', data);
         setWeatherData(data);
+        fetchClothingSuggestions(data.current.condition.text);
       })
       .catch(error => {
         console.log('Error fetching weather data:', error);
@@ -84,6 +108,7 @@ const AuthenticatedScreen = ({ user, handleAuthentication }) => {
     fetchWeatherData();
     Keyboard.dismiss();
 };
+
 
   return (
     <View style={styles.authContainer}>
@@ -100,19 +125,27 @@ const AuthenticatedScreen = ({ user, handleAuthentication }) => {
           />
           <Button
             title="Get Weather"
-            onPress={handlePress}
+            onPress={fetchWeatherData}
           />
           <StatusBar style="auto" />
         
           {weatherData && weatherData.current && (
-            <View style={styles.weatherContainer}>
-              <Text>Current Weather:</Text>
-              <Text>Temperature: {weatherData.current.temp_f}</Text>
-              <Text>Condition: {weatherData.current.condition.text}</Text>
-              <Text>time: {weatherData.location.localtime}</Text>
-            </View>
-          )}
-        </SafeAreaView>
+          <View style={styles.weatherContainer}>
+            <Text>Current Weather:</Text>
+            <Text>Temperature: {weatherData.current.temp_f}</Text>
+            <Text>Condition: {weatherData.current.condition.text}</Text>
+            <Text>Time: {weatherData.location.localtime}</Text>
+
+            {/* Include clothing suggestions component */}
+            <View style={styles.clothingSuggestionsContainer}>
+  <Text>Clothing Suggestions:</Text>
+  {clothingSuggestions.map((suggestion, index) => (
+    <Text key={index}>{suggestion}</Text>
+  ))}
+</View>
+          </View>
+        )}
+      </SafeAreaView>
       <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" />
     </View>
   );
