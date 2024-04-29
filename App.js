@@ -108,7 +108,7 @@ const [clothingSuggestions, setClothingSuggestions] = useState([]);
     Keyboard.dismiss();
 };
 
-  return (
+    return (
     <View style={styles.authContainer}>
       <Text style={styles.title}>Welcome</Text>
       <Text style={styles.emailText}>{user.email}</Text>
@@ -139,13 +139,15 @@ const [clothingSuggestions, setClothingSuggestions] = useState([]);
       {clothingSuggestions.map((suggestion, index) => (
         <Text key={index}>{suggestion}</Text>
       ))}
-            </View>
-          )}
+          </View>
+       )}
+        </View>
+       )}
         </SafeAreaView>
       <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" />
     </View>
   );
-};
+  };
 
 export default App = () => {
   const [email, setEmail] = useState('');
