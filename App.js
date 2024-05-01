@@ -6,13 +6,17 @@ import AuthenticatedScreen from './screens/AuthenticatedScreen';
 
 const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="AuthScreen">
         <Stack.Screen name="AuthScreen" component={AuthScreen} options={{ title: 'Sign In/Up' }} />
-        <Stack.Screen name="AuthenticatedScreen" component={AuthenticatedScreen} options={{ title: 'Welcome' }} />
+        <Stack.Screen name="AuthenticatedScreen">
+          {(props) => <AuthenticatedScreen {...props} user={props.route.params.user} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default App;
