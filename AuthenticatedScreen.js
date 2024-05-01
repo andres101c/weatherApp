@@ -1,9 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { getAuth, signOut } from '@firebase/auth';
+import React, { useState } from 'react';
+import {
+  StatusBar,
+  Keyboard,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from 'react-native';
 
-const API_KEY = '8158ea1b56e2497492b163654241204';
+const API_KEY = '8158ea1b56e2497492b163654241204'; 
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyAVUe6aEZbDCHEtK3GKQ8z2krPtGCRn-pY",
+  authDomain: "weather-app-a89c7.firebaseapp.com",
+  projectId: "weather-app-a89c7",
+  storageBucket: "weather-app-a89c7.appspot.com",
+  messagingSenderId: "1032223150313",
+  appId: "1:1032223150313:web:8d660be8d32a1d8b18e078",
+  measurementId: "G-ZDJ2Z2D1ZR"
+
+};
+
 
 const weatherImages = {
   Sunny: require('./backgrounds/sunny.png'),
