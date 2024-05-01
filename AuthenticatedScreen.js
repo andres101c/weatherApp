@@ -10,7 +10,10 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  Button,
 } from 'react-native';
+import { getAuth, signOut } from '@firebase/auth';
+ 
 
 const API_KEY = '8158ea1b56e2497492b163654241204'; 
 
@@ -28,23 +31,25 @@ const firebaseConfig = {
 
 
 const weatherImages = {
-  Sunny: require('./backgrounds/sunny.png'),
-  ClearNight: require('./backgrounds/clear_night.png'),
-  PartlyCloudy: require('./backgrounds/partly_cloudy.png'),
-  Foggy: require('./backgrounds/foggy.png'),
-  Cloudy: require('./backgrounds/cloudy.png'),
-  CloudyNight: require('./backgrounds/cloudy_night.png'),
-  Overcast: require('./backgrounds/overcast.png'),
-  Rain: require('./backgrounds/rainy.png'),
-  RainNight: require('./backgrounds/rain_night.png'),
-  Snow: require('./backgrounds/snowy.png'),
-  Sleet: require('./backgrounds/sleet.png'),
+  Sunny: require('../assets/backgrounds/sunny.png'),
+  ClearNight: require('../assets/backgrounds/clear_night.png'),
+  PartlyCloudy: require('../assets/backgrounds/partly_cloudy.png'),
+  Foggy: require('../assets/backgrounds/foggy.png'),
+  Cloudy: require('../assets/backgrounds/cloudy.png'),
+  CloudyNight: require('../assets/backgrounds/cloudy_night.png'),
+  Overcast: require('../assets/backgrounds/overcast.png'),
+  Rain: require('../assets/backgrounds/rainy.png'),
+  RainNight: require('../assets/backgrounds/rain_night.png'),
+  Snow: require('../assets/backgrounds/snowy.png'),
+  Sleet: require('../assets/backgrounds/sleet.png'),
 };
 
-const AuthenticatedScreen = () => {
+const AuthenticatedScreen = ({ navigation, route }) => {
   const [weatherData, setWeatherData] = useState(null);
   const [zipCode, setZipCode] = useState('');
   const [clothingSuggestions, setClothingSuggestions] = useState([]);
+  const [backgroundImage, setBackgroundImage] = useState(null);
+  const user = route.params?.user || null; 
 
   const fetchClothingSuggestions = (weatherCondition) => {
     let suggestions = [];
@@ -90,6 +95,11 @@ const AuthenticatedScreen = () => {
     signOut(auth);
   };
 
+  const handlePress = () => {
+    fetchWeatherData();
+    Keyboard.dismiss();
+};
+
   const updateBackgroundImage = (conditionText) => {
     const is_day = weatherData && weatherData.current && weatherData.current.is_day;
     if (conditionText.match(/sunny|clear/i)) {
@@ -112,17 +122,42 @@ const AuthenticatedScreen = () => {
       setBackgroundImage(null);
     }
   };
-
+  const handleAuthentication = async () => {
+    try {
+      if (user) {
+        // If user is already authenticated, log out
+        console.log('User logged out successfully!');
+        await signOut(auth);
+        navigation.navigate('AuthScreen'); // Navigate back to the login screen
+      } else {
+        // Sign in or sign up
+        if (isLogin) {
+          // Sign in
+          const { user } = await signInWithEmailAndPassword(auth, email, password);
+          console.log('User signed in successfully!');
+          navigation.navigate('AuthenticatedScreen', { user });
+        } else {
+          // Sign up
+          const { user } = await createUserWithEmailAndPassword(auth, email, password);
+          console.log('User created successfully!');
+          navigation.navigate('AuthenticatedScreen', { user });
+        }
+      }
+    } catch (error) {
+      console.error('Authentication error:', error.message);
+    }
+  };
+  
   return (
-    <View style={styles.authContainer}>
-      <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.emailText}>{user.email}</Text>
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+      <View style={styles.authContainer}>
+        <Text style={styles.title}>Welcome</Text>
         <SafeAreaView style={styles.container}>
           <Text>Enter Zip Code:</Text>
           <TextInput
             style={styles.input}
             value={zipCode}
-            onChangeText={(text)=> setZipCode(text)}
+            onChangeText={(text) => setZipCode(text)}
             placeholder="Enter zip code"
             keyboardType="numeric"
           />
@@ -131,29 +166,31 @@ const AuthenticatedScreen = () => {
             onPress={handlePress}
           />
           <StatusBar style="auto" />
-        
-          {weatherData && weatherData.current && (
-          <View style={styles.weatherContainer}>
-            <Text> you are in {weatherData.location.name}, {weatherData.location.region} </Text>
-            <Text>Current Weather:</Text>
-            <Text>Temperature: {weatherData.current.temp_f}</Text>
-            <Text>Condition: {weatherData.current.condition.text}</Text>
-            <Text>Time: {weatherData.location.localtime}</Text>
 
-            {/* Include clothing suggestions component */}
-            <View style={styles.clothingSuggestionsContainer}>
-  <Text>Clothing Suggestions:</Text>
-  {clothingSuggestions.map((suggestion, index) => (
-    <Text key={index}>{suggestion}</Text>
-  ))}
-</View>
-          </View>
-        )}
-      </SafeAreaView>
-      <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" />
-    </View>
+          {weatherData && weatherData.current && (
+            <View style={styles.weatherContainer}>
+              <Text> you are in {weatherData.location.name}, {weatherData.location.region} </Text>
+              <Text>Current Weather:</Text>
+              <Text>Temperature: {weatherData.current.temp_f}</Text>
+              <Text>Condition: {weatherData.current.condition.text}</Text>
+              <Text>Time: {weatherData.location.localtime}</Text>
+
+              {/* Include clothing suggestions component */}
+              <View style={styles.clothingSuggestionsContainer}>
+                <Text>Clothing Suggestions:</Text>
+                {clothingSuggestions.map((suggestion, index) => (
+                  <Text key={index}>{suggestion}</Text>
+                ))}
+              </View>
+            </View>
+          )}
+        </SafeAreaView>
+        <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" />
+      </View>
+    </ImageBackground>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
