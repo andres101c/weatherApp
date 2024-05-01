@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+\import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, ScrollView, Keyboard } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { initializeApp } from '@firebase/app';
@@ -43,14 +43,14 @@ const AuthScreen = ({ navigation }) => {
         // Sign in or sign up
         if (isLogin) {
           // Sign in
-          await signInWithEmailAndPassword(auth, email, password);
+          const { user } = await signInWithEmailAndPassword(auth, email, password);
           console.log('User signed in successfully!');
-          navigation.navigate('AuthenticatedScreen');
+          navigation.navigate('AuthenticatedScreen', { user });
         } else {
           // Sign up
-          await createUserWithEmailAndPassword(auth, email, password);
+          const { user } = await createUserWithEmailAndPassword(auth, email, password);
           console.log('User created successfully!');
-          navigation.navigate('AuthenticatedScreen');
+          navigation.navigate('AuthenticatedScreen', { user });
         }
       }
     } catch (error) {
