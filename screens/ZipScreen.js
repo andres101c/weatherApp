@@ -30,75 +30,76 @@ import UVIcon from '../assets/icons/uv_icon.png';
 import AirQualityIcon from '../assets/icons/air_quality_icon.png';
 
 const ZipScreen = ({ navigation, route }) => {
-  const [clothingSuggestions, setClothingSuggestions] = useState([]);
-  const [backgroundImage, setBackgroundImage] = useState(null);
-  const [weatherData, setWeatherData] = useState(null);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [showToggleButton, setShowToggleButton] = useState(false);
-  const {zip} = route.params;
+    const [clothingSuggestions, setClothingSuggestions] = useState([]);
+    const [backgroundImage, setBackgroundImage] = useState(null);
+    const [weatherData, setWeatherData] = useState(null);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [showToggleButton, setShowToggleButton] = useState(false);
+    const {zip} = route.params;
 
-  const fetchClothingSuggestions = (weatherCondition) => {
-  let suggestions = [];
-  let temp_f = 52; 
-
-  if (weatherCondition.match('Sunny')) {
-      suggestions.push('Shorts', 'T-shirt', 'Sunglasses');
-      if(temp_f){
-        suggestions.push('Apply Sunscreen')
-      }
-  } 
+    const fetchClothingSuggestions = (weatherCondition) => {
+    let suggestions = [];
+    let temp_f = 55; 
   
-  else if (weatherCondition.match ('cloudy')) {
-    if(temp_f){
-      suggestions.push('Shorts', 'T-shirt'); 
-        }
-    else
-      suggestions.push('Jeans', 'T-shirt', 'Jacket');
-    
-      } 
-  
-  else if (weatherCondition.match('rain')) {
-      suggestions.push('Raincoat', 'Umbrella', 'Boots');
-  }  
-
-  else if (weatherCondition.match('snowy')) {
-      suggestions.push('Ski pants', 'Jacket', 'Snow boots');
-  }
-  
-  else if (weatherCondition.match('Clear')) {
-    
-    if(temp_f){
-      suggestions.push('Shorts', 'T-shirt', 'Sunglasses','Apply Sunscreen')
+    if (weatherCondition.match('Sunny')) {
+      if(!temp_f){
+        suggestions.push('Shirt', 'Light Sweatshirt', 'Pants')
+      }  
+      else
+        suggestions.push('Shorts', 'T-shirt', 'Sunglasses');
+        
     } 
-    else 
-      suggestions.push('Shirt', 'Light Sweatshit', 'Pants');
-     
-  } 
+    
+    else if (weatherCondition.match ('cloudy')) {
+      if(temp_f){
+        suggestions.push('Shorts', 'T-shirt'); 
+          }
+      else
+        suggestions.push('Jeans', 'T-shirt', 'Jacket');
+        } 
+    
+    else if (weatherCondition.match('rain')) {
+        suggestions.push('Raincoat', 'Umbrella', 'Boots');
+    }  
   
-  else if (weatherCondition.match('Overcast')) { 
-    if(temp_f){
-      suggestions.push('Shorts', 'T-shirt')
+    else if (weatherCondition.match('snowy')) {
+        suggestions.push('Ski pants', 'Jacket', 'Snow boots');
     }
-    else
-      suggestions.push('Jeans', 'T-shirt', 'Jacket');
-  }
-  setClothingSuggestions(suggestions);
-  };
+    
+    else if (weatherCondition.match('Clear')) {
+      
+      if(temp_f){
+        suggestions.push('Shorts', 'T-shirt', 'Sunglasses')
+      } 
+      else 
+        suggestions.push('Shirt', 'Light Sweatshit', 'Pants');
+       
+    } 
+    
+    else if (weatherCondition.match('Overcast')) { 
+      if(temp_f){
+        suggestions.push('Shorts', 'T-shirt')
+      }
+      else
+        suggestions.push('Jeans', 'T-shirt', 'Jacket');
+    }
+    setClothingSuggestions(suggestions);
+    };
 
     const updateBackgroundImage = (conditionText) => {
         const is_day = weatherData && weatherData.current && weatherData.current.is_day;
         if (conditionText.match(/sunny|clear/i)) {
-            setBackgroundImage(is_day ? weatherImages.Sunny : weatherImages.ClearNight);
+            setBackgroundImage(!is_day ? weatherImages.Sunny : weatherImages.ClearNight);
         } else if (conditionText.match(/partly cloudy/i)) {
             setBackgroundImage(weatherImages.PartlyCloudy);
         } else if (conditionText.match(/mist|fog/i)) {
             setBackgroundImage(weatherImages.Foggy);
         } else if (conditionText.match(/cloudy/i)) {
-            setBackgroundImage(is_day ? weatherImages.Cloudy : weatherImages.CloudyNight);
+            setBackgroundImage(!is_day ? weatherImages.Cloudy : weatherImages.CloudyNight);
         } else if (conditionText.match(/overcast/i)) {
             setBackgroundImage(weatherImages.Overcast);
         } else if (conditionText.match(/rain|drizzle|shower/i)) {
-            setBackgroundImage(is_day ? weatherImages.Rain : weatherImages.RainNight);
+            setBackgroundImage(!is_day ? weatherImages.Rain : weatherImages.RainNight);
         } else if (conditionText.match(/snow|blizzard/i)) {
             setBackgroundImage(weatherImages.Snow);
         } else if (conditionText.match(/sleet/i)) {
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
       paddingVertical: 5,
       paddingHorizontal: 10,
       maxHeight: 100,
-    }, 
+    },
     dropdown: {
       backgroundColor: 'white', 
       borderColor: '#ccc', 
