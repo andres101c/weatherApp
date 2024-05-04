@@ -1,1 +1,0 @@
- Sunny: require('./assets/backgrounds/sunny.png'),
